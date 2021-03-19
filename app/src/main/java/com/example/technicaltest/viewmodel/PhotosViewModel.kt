@@ -17,9 +17,9 @@ class PhotosViewModel constructor(private val photosRepository: PhotosRepository
     val albumPhotosListLiveData: LiveData<State<List<PhotosItem>>>
         get() = _albumPhotosListLiveData
 
-    fun getPhotosByAlbumId(albumId : Int) {
+    fun getPhotosByAlbumId(albumId : Int,userId : Int) {
         viewModelScope.launch {
-            photosRepository.getPhotosByAlbumId(albumId).collect {
+            photosRepository.getPhotosByAlbumId(userId,albumId).collect {
                 _albumPhotosListLiveData.value = it
                 if (it is State.Success) {
                     this.cancel()

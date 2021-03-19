@@ -13,7 +13,7 @@ import java.util.*
 @ExperimentalCoroutinesApi
 class PhotosRepository constructor(private val apiService : ApiService, private val photosDao: PhotosDao){
 
-    fun getPhotosByAlbumId(albumId : Int) : Flow<State<List<PhotosItem>>> {
+    fun getPhotosByAlbumId(userId : Int,albumId : Int) : Flow<State<List<PhotosItem>>> {
         return object : NetworkBoundRepository<List<PhotosItem>, List<PhotosItem>>() {
             override suspend fun saveNetworkResult(item: List<PhotosItem>) {
                 photosDao.insert(item)
@@ -25,7 +25,7 @@ class PhotosRepository constructor(private val apiService : ApiService, private 
                 return photosDao.getPhotosByAlbumId(albumId)
             }
             override suspend fun fetchFromNetwork(): Response<List<PhotosItem>> {
-                return apiService.getPhotosByAlbumId(albumId)
+                return apiService.getPhotosByAlbumId(userId,albumId)
             }
         }.asFlow()
     }

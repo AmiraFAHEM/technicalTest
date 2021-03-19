@@ -16,5 +16,5 @@ interface ApiService{
     suspend fun getUserAlbums(@Path("userId") userId: Int?):  Response<List<AlbumsItem>>
 
     @GET("/users/{userId}/photos?")
-    suspend fun getPhotosByAlbumId(@Query("albumId") userId: Int):  Response<List<PhotosItem>>
+    suspend fun getPhotosByAlbumId(@Path("userId") userId: Int?,@Query("albumId") albumId: Int):  Response<List<PhotosItem>>
 }

@@ -56,6 +56,8 @@ class AlbumPhotosListActivity : BaseActivity<PhotosViewModel, ActivityAlbumPhoto
 
     private val photosListAdapter = PhotosListAdapter()
     var albumId : Int? = null
+    var userId : Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mViewBinding.root)
@@ -63,7 +65,8 @@ class AlbumPhotosListActivity : BaseActivity<PhotosViewModel, ActivityAlbumPhoto
         mViewBinding.usersRecyclerView.adapter = photosListAdapter
         albumId = intent.extras?.getInt(ALBUM_ID)
             ?: throw IllegalArgumentException("`albumId` must be non-null")
-
+        userId = intent.extras?.getInt(ALBUM_ID)
+            ?: throw IllegalArgumentException("`userId` must be non-null")
         initAlbumPhotos()
         handleNetworkChanges()
     }
@@ -93,7 +96,10 @@ class AlbumPhotosListActivity : BaseActivity<PhotosViewModel, ActivityAlbumPhoto
 
     private fun getPhotosByAlbumId() {
         albumId?.let { albumId ->
-            mViewModel.getPhotosByAlbumId(albumId)
+            userId?.let { userId ->
+                mViewModel.getPhotosByAlbumId(userId,albumId)
+            }
+
         }
     }
 
@@ -143,10 +149,16 @@ class AlbumPhotosListActivity : BaseActivity<PhotosViewModel, ActivityAlbumPhoto
     companion object {
         const val ANIMATION_DURATION = 1000.toLong()
         private const val ALBUM_ID = "albumId"
+        private const val USER_ID = "userId"
+
         fun getStartIntent(
             context: Context,
-            userId: Int
-        ) = Intent(context, AlbumPhotosListActivity::class.java).apply { putExtra(ALBUM_ID, userId) }
+            userId: Int,
+            albumId: Int
+            ) = Intent(context, AlbumPhotosListActivity::class.java).apply {
+            putExtra(ALBUM_ID, albumId)
+            putExtra(USER_ID, userId)
+        }
 
     }
 }

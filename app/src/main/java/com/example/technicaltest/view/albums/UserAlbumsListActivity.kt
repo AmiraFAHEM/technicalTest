@@ -143,7 +143,8 @@ class UserAlbumsListActivity : BaseActivity<AlbumsViewModel, ActivityAlbumsBindi
             imageView.transitionName
         )
         val albumId = albumsItem.id
-        val intent = AlbumPhotosListActivity.getStartIntent(this, albumId)
+        val userId = albumsItem.userId
+        val intent = AlbumPhotosListActivity.getStartIntent(this,userId, albumId)
         startActivity(intent, options.toBundle())
     }
 
