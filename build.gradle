@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = "1.4.10"
+    ext.kotlin_version = "1.3.72"
     ext.gradle_version = "4.2.0-beta06"
     ext.versions = [
             'compileSdk'        : 30,
@@ -12,9 +12,10 @@ buildscript {
             'retrofit'          : '2.9.0',
             'lifecycle'          : '2.3.0',
             'gson'              : '2.8.6',
-            'coil'           : '1.0.0',
             'picasso'           : '2.71828',
-            'version_room' : '2.3.0-beta03',
+            'livedata'         : '2.2.0',
+
+            'version_room' : '2.3.0-alpha04',
             'koin_version' : '2.1.5'
 
 
@@ -23,13 +24,13 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -37,6 +38,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+
     }
 }
 

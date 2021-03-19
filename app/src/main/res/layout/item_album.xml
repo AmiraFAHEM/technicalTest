@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginLeft="@dimen/dimen_8"
-        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintStart_toEndOf="@id/albumImageView"
         app:layout_constraintEnd_toStartOf="@id/linkToAlbumTv"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -35,7 +35,7 @@
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/albumImageView"
         android:layout_width="82sp"
         android:layout_height="0dp"
         android:transitionName="photo"

@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.*
 import java.util.*
 import com.example.technicaltest.utils.State
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.internal.filterList
 
 @ExperimentalCoroutinesApi
 class UsersViewModel constructor(private val usersRepository: UsersRepository) : ViewModel() {
@@ -23,6 +25,20 @@ class UsersViewModel constructor(private val usersRepository: UsersRepository) :
                 _usersListLiveData.value = it
                 if (it is State.Success) {
                     this.cancel()
+                }
+            }
+        }
+    }
+    fun getUsersSearchResult(query: String): Flow<State<List<UserItem>>> {
+        return flow {
+            delay(1000)
+            usersRepository.getUsersList().collect {
+                if (it is State.Success){
+                    val filteredList = it.data.filter {
+                        it.username.toUpperCase(Locale.getDefault()).contains(query.toUpperCase(Locale.getDefault()))
+                    }
+                    it.data = filteredList
+                    emit(it)
                 }
             }
         }

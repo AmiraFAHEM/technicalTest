@@ -11,5 +11,5 @@ data class UserItem(
     val username: String,
     val website: String,
     val email: String,
-    val phone: String,
+    val phone: String
 )

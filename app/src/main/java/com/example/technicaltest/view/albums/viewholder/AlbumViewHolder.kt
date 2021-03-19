@@ -37,7 +37,7 @@ class AlbumViewHolder(private val binding: ItemAlbumBinding) : RecyclerView.View
     fun bind(album: AlbumsItem, onItemClicked: (AlbumsItem, ImageView) -> Unit) {
         binding.titleTv.text = album.title
         binding.root.setOnClickListener {
-            onItemClicked(album, binding.imageView)
+            onItemClicked(album, binding.albumImageView)
         }
     }
 }

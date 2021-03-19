@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.observe
 import com.example.technicaltest.R
 import com.example.technicaltest.databinding.ActivityMainBinding
 import com.example.technicaltest.model.UserItem
@@ -16,28 +17,67 @@ import dev.shreyaspatil.foodium.ui.base.BaseActivity
 import com.example.technicaltest.view.users.adapter.UsersListAdapter
 import com.example.technicaltest.viewmodel.UsersViewModel
 import dev.shreyaspatil.foodium.ui.main.UserAlbumsListActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import okhttp3.internal.toImmutableList
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
-class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() {
+class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() , CoroutineScope {
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    private lateinit var job: Job
 
     override val mViewModel: UsersViewModel by viewModel()
 
     private val usersListAdapter = UsersListAdapter(this::onItemClicked)
 
+    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mViewBinding.root)
-
+        job = Job()
         mViewBinding.usersRecyclerView.adapter = usersListAdapter
 
         initUsersList()
-
+        searchAction()
         handleNetworkChanges()
     }
 
+    @FlowPreview
+    private fun searchAction() {
+        launch{
+            searchBar.getQueryTextChangeStateFlow()
+                .debounce(300)
+                .filter { query ->
+                    if (query.isEmpty()) {
+                        withContext(Dispatchers.Main) {
+                            getUsersList()
+                        }
+                        return@filter false
+                    } else {
+                        return@filter true
+                    }
+                }
+                .distinctUntilChanged()
+                .flatMapLatest { query ->
+                    mViewModel.getUsersSearchResult(query)
+                }
+                .flowOn(Dispatchers.Default)
+                .collect { result ->
+                    withContext(Dispatchers.Main) {
+                        if (result is State.Success) {
+                            usersListAdapter.submitList(result.data)
+                            usersListAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+        }
+    }
     private fun initUsersList() {
         mViewModel.usersListLiveData.observe(this) { state ->
             when (state) {

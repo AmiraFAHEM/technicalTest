@@ -33,6 +33,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.observe
 import com.example.technicaltest.R
 import com.example.technicaltest.databinding.ActivityAlbumsBinding
 import com.example.technicaltest.databinding.ActivityMainBinding
