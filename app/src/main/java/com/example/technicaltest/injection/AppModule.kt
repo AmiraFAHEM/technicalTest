@@ -2,6 +2,7 @@ package com.example.technicaltest.injection
 
 
 import androidx.core.content.ContextCompat
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.example.technicaltest.ApplicationCore
 import com.example.technicaltest.R
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -20,7 +21,9 @@ import java.util.concurrent.TimeUnit
 @FlowPreview
 @ExperimentalCoroutinesApi
 val appModule = module {
-
+    single {
+        CountingIdlingResource("TECHNICAL_TEST")
+    }
     single { provideLogging() }
     single { provideOkHttpClient(get()) }
     single { provideRetrofitService(get()) }

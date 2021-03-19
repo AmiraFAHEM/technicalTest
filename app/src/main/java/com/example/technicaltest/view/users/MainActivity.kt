@@ -16,7 +16,7 @@ import com.example.technicaltest.utils.*
 import dev.shreyaspatil.foodium.ui.base.BaseActivity
 import com.example.technicaltest.view.users.adapter.UsersListAdapter
 import com.example.technicaltest.viewmodel.UsersViewModel
-import dev.shreyaspatil.foodium.ui.main.UserAlbumsListActivity
+import com.example.technicaltest.view.albums.UserAlbumsListActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*

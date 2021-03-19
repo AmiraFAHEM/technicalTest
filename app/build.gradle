@@ -81,7 +81,11 @@ dependencies {
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.livedata"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$versions.livedata"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.livedata"
+
+    implementation "androidx.test.espresso:espresso-idling-resource:$versions.espresso"
+    implementation "androidx.multidex:multidex:$versions.androidSupportMultiDex"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.2.0"
+    androidTestImplementation "it.xabaras.android.espresso:recyclerview-child-actions:1.0"
 }
 

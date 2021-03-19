@@ -62,7 +62,7 @@ class AlbumPhotosListActivity : BaseActivity<PhotosViewModel, ActivityAlbumPhoto
         super.onCreate(savedInstanceState)
         setContentView(mViewBinding.root)
 
-        mViewBinding.usersRecyclerView.adapter = photosListAdapter
+        mViewBinding.photosRecyclerView.adapter = photosListAdapter
         albumId = intent.extras?.getInt(ALBUM_ID)
             ?: throw IllegalArgumentException("`albumId` must be non-null")
         userId = intent.extras?.getInt(ALBUM_ID)

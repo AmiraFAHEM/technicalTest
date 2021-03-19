@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dev.shreyaspatil.foodium.ui.main.UserAlbumsListActivity" />
+        <activity android:name=".view.albums.UserAlbumsListActivity" />
         <activity android:name="dev.shreyaspatil.foodium.ui.main.AlbumPhotosListActivity" />
     </application>
 
