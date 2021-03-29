@@ -1,6 +1,6 @@
 package com.example.technicaltest
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.premedit.runningcare.data.api.ApiService
 import kotlinx.coroutines.runBlocking
@@ -49,6 +49,8 @@ class AlbumServiceTest {
     @Test
     fun getPhotosByAlbumId() = runBlocking {
         enqueueResponse("albums.json")
+        //ici et dans UsersServiceTest tu ne testes pas ton code, tu testes les données du fichier album.json
+        //il n'y a pas vraiment d'utilité à tester la couche Service. C'est le backend qui va tester ça
         val albums = service.getUserAlbums(1).body()
 
         MatcherAssert.assertThat(albums, notNullValue())

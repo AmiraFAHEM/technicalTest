@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package dev.shreyaspatil.foodium.ui.main.viewholder
+package com.example.technicaltest.view.users.viewholder
 
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
