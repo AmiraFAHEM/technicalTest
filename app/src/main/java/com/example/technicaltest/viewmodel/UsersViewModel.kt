@@ -2,16 +2,9 @@ package com.example.technicaltest.viewmodel
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
-import com.example.technicaltest.model.UserItem
 import com.example.technicaltest.data.repository.UsersRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
-import java.util.*
+import com.example.technicaltest.model.UserItem
 import com.example.technicaltest.utils.State
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import okhttp3.internal.filterList
 
 class UsersViewModel constructor(private val usersRepository: UsersRepository) : ViewModel() {
 
@@ -27,23 +20,5 @@ class UsersViewModel constructor(private val usersRepository: UsersRepository) :
     @MainThread
     fun retry() {
         trigger.value = Unit
-    }
-
-
-
-    //TODO improve later delay
-    fun getUsersSearchResult(query: String): Flow<State<List<UserItem>>> {
-        return flow {
-            delay(1000)
-            usersRepository.getUsersList().collect {
-                if (it is State.Success){
-                    val filteredList = it.data.filter {
-                        it.username.toUpperCase(Locale.getDefault()).contains(query.toUpperCase(Locale.getDefault()))
-                    }
-                    it.data = filteredList
-                    emit(it)
-                }
-            }
-        }
     }
 }

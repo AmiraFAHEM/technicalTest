@@ -1,6 +1,6 @@
 package com.example.technicaltest
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.premedit.runningcare.data.api.ApiService
 import kotlinx.coroutines.runBlocking

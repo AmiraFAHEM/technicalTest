@@ -4,8 +4,10 @@ package com.example.technicaltest.view.users
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.observe
@@ -13,17 +15,14 @@ import com.example.technicaltest.R
 import com.example.technicaltest.databinding.ActivityMainBinding
 import com.example.technicaltest.model.UserItem
 import com.example.technicaltest.utils.*
-import dev.shreyaspatil.foodium.ui.base.BaseActivity
+import com.example.technicaltest.view.albums.UserAlbumsListActivity
 import com.example.technicaltest.view.users.adapter.UsersListAdapter
 import com.example.technicaltest.viewmodel.UsersViewModel
-import com.example.technicaltest.view.albums.UserAlbumsListActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import dev.shreyaspatil.foodium.ui.base.BaseActivity
 import okhttp3.internal.toImmutableList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() {
+class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>(){
 
 
     override val mViewModel: UsersViewModel by viewModel()
@@ -41,31 +40,24 @@ class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() {
     }
 
     private fun searchAction() {
-           /* searchBar.getQueryTextChangeStateFlow()
-                .debounce(300)
-                .filter { query ->
-                    if (query.isEmpty()) {
-                        withContext(Dispatchers.Main) {
-                            getUsersList()
-                        }
-                        return@filter false
-                    } else {
-                        return@filter true
-                    }
+        mViewBinding.searchBar.apply {
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    usersListAdapter.filter.filter(query)
+                    return false
                 }
-                .distinctUntilChanged()
-                .flatMapLatest { query ->
-                    mViewModel.getUsersSearchResult(query)
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
                 }
-                .flowOn(Dispatchers.Default)
-                .collect { result ->
-                    withContext(Dispatchers.Main) {
-                        if (result is State.Success) {
-                            usersListAdapter.submitList(result.data)
-                            usersListAdapter.notifyDataSetChanged()
-                        }
-                    }
-                }*/
+            })
+            setOnCloseListener {
+                usersListAdapter.resetSearch()
+                usersListAdapter.notifyDataSetChanged()
+                true
+            }
+        }
+
 
     }
     private fun initUsersList() {
@@ -74,7 +66,8 @@ class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() {
                 is State.Loading -> showLoading(true)
                 is State.Success -> {
                     if (state.data.isNotEmpty()) {
-                        usersListAdapter.submitList(state.data.toImmutableList())
+                        usersListAdapter.setUsers(state.data.toMutableList())
+                        usersListAdapter.notifyDataSetChanged()
                         showLoading(false)
                     }
                 }
