@@ -22,25 +22,17 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import okhttp3.internal.toImmutableList
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.coroutines.CoroutineContext
 
-@ExperimentalCoroutinesApi
-class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() , CoroutineScope {
+class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() {
 
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.Main + job
-
-    private lateinit var job: Job
 
     override val mViewModel: UsersViewModel by viewModel()
 
     private val usersListAdapter = UsersListAdapter(this::onItemClicked)
 
-    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mViewBinding.root)
-        job = Job()
         mViewBinding.usersRecyclerView.adapter = usersListAdapter
 
         initUsersList()
@@ -48,10 +40,8 @@ class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() , Corou
         handleNetworkChanges()
     }
 
-    @FlowPreview
     private fun searchAction() {
-        launch{
-            searchBar.getQueryTextChangeStateFlow()
+           /* searchBar.getQueryTextChangeStateFlow()
                 .debounce(300)
                 .filter { query ->
                     if (query.isEmpty()) {
@@ -75,15 +65,15 @@ class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() , Corou
                             usersListAdapter.notifyDataSetChanged()
                         }
                     }
-                }
-        }
+                }*/
+
     }
     private fun initUsersList() {
         mViewModel.usersListLiveData.observe(this) { state ->
             when (state) {
                 is State.Loading -> showLoading(true)
                 is State.Success -> {
-                    if (!state.data.isEmpty()) {
+                    if (state.data.isNotEmpty()) {
                         usersListAdapter.submitList(state.data.toImmutableList())
                         showLoading(false)
                     }
@@ -91,19 +81,16 @@ class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() , Corou
                 is State.Error -> {
                     showToast(state.message)
                     showLoading(false)
+                    // If State isn't `Success` then reload posts.
+                    //getUsersList() <- je commente car je trouve ça consommateur d'energie.
+                    // SI on arrive pas à charger les données, c'est qu'il y a un soucis, par ex l'utilisateur peux avoir une connexion internet super faible,
+                    // ton "handleNetworkChanges", te dis bien qu'il y a une connexion mais elle est tellement faible qu'on ne peut charger les données
+                    //il est préférable d'ajouter un bouton "retry" sur l'écran en cas d'erreur et de mapper le click sur ce bouton à "viewmodel.retry()"
                 }
             }
         }
-
-        // If State isn't `Success` then reload posts.
-        if (mViewModel.usersListLiveData.value !is State.Success) {
-            getUsersList()
-        }
     }
 
-    private fun getUsersList() {
-        mViewModel.getUsersList()
-    }
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading){
@@ -125,7 +112,8 @@ class MainActivity : BaseActivity<UsersViewModel, ActivityMainBinding>() , Corou
                 }
             } else {
                 if (mViewModel.usersListLiveData.value is State.Error || usersListAdapter.itemCount == 0) {
-                    getUsersList()
+                    //getUsersList()
+                    //cf commentaire ligne 84
                 }
                 mViewBinding.textViewNetworkStatus.text = getString(R.string.text_connectivity)
                 mViewBinding.networkStatusLayout.apply {
